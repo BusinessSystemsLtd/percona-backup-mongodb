@@ -177,7 +177,10 @@ func main() {
 			getConfig(pbmClient)
 		}
 	case backupCmd.FullCommand():
-		bcpName := time.Now().UTC().Format(time.RFC3339)
+		// RFC3339     = "2006-01-02T15:04:05Z07:00"
+		// bcpName is used to create a file and : is invalid filename char in windows.
+		// So Replace : with space
+		bcpName := strings.ReplaceAll(time.Now().UTC().Format(time.RFC3339), ":", " ")
 		fmt.Printf("Starting backup '%s'", bcpName)
 		storeString, err := backup(pbmClient, bcpName, *bcpCompression)
 		if err != nil {
